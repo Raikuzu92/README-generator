@@ -2,6 +2,7 @@
 const fs = require('fs');
 const inquirer = require('inquirer');
 const generateMarkdown = require('./utils/generateMarkdown.js');
+const { default: Choices } = require('inquirer/lib/objects/choices.js');
 
 const questions = [
     "What is the title of the project?",
@@ -43,9 +44,26 @@ async function promptUser() {
             message: questions[4],
         },
         {
-            type: 'input',
+            type: 'list',
             name: 'license',
             message: questions[5],
+            choices: [
+                "None",
+                "Apache License 2.0",
+                "GNU General Public License v3.0",
+                "MIT License",
+                "BSD 2-Clause 'Simplified' License",
+                "BSD 3-Clause 'New' or 'Revised' License",
+                "Boost Software License 1.0",
+                "Creative Commons Zero v1.0 Universal",
+                "Eclipse Public License 2.0",
+                "GNU Affero General Public License v3.0",
+                "GNU General Public License v2.0",
+                "GNU Lesser General Public License v2.1",
+                "Mozilla Public License 2.0",
+                "The Unlicense"
+            ],
+            
         },
         {
           type: 'input',
@@ -61,26 +79,8 @@ async function promptUser() {
 }
 
 function writeToFile(fileName, data) {
-    const content = 
-    `# Title = ${data.title}
-
-## Description
-${data.description}
-
-## Installation
-${data.install}
-
-## Usage
-${data.usage}
-
-## Contributing
-${data.contribute}
-
-## License
-${data.license}
-`;
-
-    fs.writeFile(fileName, content, (err) => {
+ 
+    fs.writeFile(fileName, generateMarkdown(data), (err) => {
         if (err) {
             console.error('Error writing file:', err);
         } else {
